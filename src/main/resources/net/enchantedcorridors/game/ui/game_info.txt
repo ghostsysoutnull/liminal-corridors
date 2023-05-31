@@ -1,0 +1,29 @@
+Welcome to the Enchanted Corridors!
+
+Step into a world of wonder and mystery as you enter the enchanting corridors that lie before you. Your journey begins in a grand hallway adorned with a series of intricately designed doors, each one holding its own unique secrets and surprises.
+
+As you approach the doors, you'll be captivated by the kaleidoscope of colors that adorn them. From vibrant hues to delicate pastels, each door invites you to uncover the mysteries that lie within. Some doors feature elegant windows that offer tantalizing glimpses into the hidden wonders beyond.
+
+Prepare to be enchanted by the myriad of decor that adorns the corridors. From ornate carvings to modern minimalism, every door carries its own distinctive style, reflecting the mysteries that await inside.
+
+But beware! As you journey deeper into the corridors, you may come across doors that bear mystical inscriptions, evoking a sense of awe and trepidation. These ancient markings speak of forgotten realms and untold adventures, challenging your courage to enter.
+
+As you open the doors, a realm of interconnected apartments reveals itself, each housing a sequence of captivating rooms. Immerse yourself in a tapestry of colors as you traverse through rooms adorned with vivid shades, from soothing blues to fiery reds.
+
+Discover a treasure trove of furniture that breathes life into each room. From plush sofas to elegant tables, each piece invites you to rest and explore. The lighting dances gracefully, creating an ethereal atmosphere that guides your path through the unknown.
+
+Delve deeper into the rooms and encounter an array of objects that spark intrigue. Unusual artifacts, ancient tomes, and magical trinkets are scattered throughout, offering hints and puzzles to unravel the mysteries of the Enchanted Corridors.
+
+Amidst your exploration, you may stumble upon secret chambers that hold valuable secrets and coveted treasures. Keep a keen eye, for the realm bestows upon you the chance to collect powerful artifacts and magical relics that will aid you on your quest.
+
+Venture further into the Enchanted Corridors, and you will discover hidden elevators that whisk you away to new realms. Ascend to higher floors, where entirely new corridors and apartments await, each more enchanting and challenging than the last.
+
+Prepare yourself for an extraordinary adventure, where imagination intertwines with reality. The Enchanted Corridors eagerly await your arrival, daring you to unlock their wonders and conquer their mysteries.
+
+Now, step forward and embark on your quest:
+
+Choose a door by entering the corresponding number.
+Utilize the mystical elevators to ascend or descend to new realms.
+Check your inventory by typing "inventory" at any time.
+If you wish to exit the game, simply type "quit."
+May the enchantment guide your path as you navigate the remarkable realm of the Enchanted Corridors!
