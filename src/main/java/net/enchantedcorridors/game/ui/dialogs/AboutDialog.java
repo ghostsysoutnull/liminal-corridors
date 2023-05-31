@@ -1,4 +1,4 @@
-package net.enchantedcorridors.game.ui;
+package net.enchantedcorridors.game.ui.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
@@ -116,7 +116,7 @@ public class AboutDialog extends JDialog
         JScrollPane scrollPane = new JScrollPane(gameInfoTextArea);
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        try (InputStream inputStream = getClass().getResourceAsStream("game_info.txt"); BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+        try (InputStream inputStream = getClass().getResourceAsStream("/net/enchantedcorridors/game/ui/game_info.txt"); BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 gameInfoTextArea.append(line + "\n");

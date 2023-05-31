@@ -31,11 +31,14 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
+import net.enchantedcorridors.game.ui.dialogs.AboutDialog;
+import net.enchantedcorridors.game.ui.dialogs.CommandSelectionDialog;
+import net.enchantedcorridors.game.ui.dialogs.ThemeDialog;
 import net.enchantedcorridors.game.ui.themes.Theme;
 import net.enchantedcorridors.game.ui.themes.ThemeBuilder;
 import net.enchantedcorridors.game.ui.themes.ThemeChangeListener;
 
-public class MysteryMansionGame extends JFrame implements ActionListener, KeyListener, MouseWheelListener, ThemeChangeListener, Game
+public class LiminalCorridorsFrame extends JFrame implements ActionListener, KeyListener, MouseWheelListener, ThemeChangeListener, Game
 {
     private static final long serialVersionUID = 1L;
 
@@ -56,7 +59,7 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
 
     private boolean isFullScreen;
 
-    public MysteryMansionGame()
+    public LiminalCorridorsFrame()
     {
         setTitle("Mystery Mansion Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -410,7 +413,7 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
         {
             public void run()
             {
-                new MysteryMansionGame();
+                new LiminalCorridorsFrame();
             }
         });
     }

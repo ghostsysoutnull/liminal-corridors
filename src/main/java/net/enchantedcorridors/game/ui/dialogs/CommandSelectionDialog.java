@@ -1,4 +1,4 @@
-package net.enchantedcorridors.game.ui;
+package net.enchantedcorridors.game.ui.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.event.KeyAdapter;
@@ -11,6 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+
+import net.enchantedcorridors.game.ui.Game;
 
 public class CommandSelectionDialog
 {

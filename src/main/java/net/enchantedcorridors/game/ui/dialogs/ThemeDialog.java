@@ -1,4 +1,4 @@
-package net.enchantedcorridors.game.ui;
+package net.enchantedcorridors.game.ui.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Frame;
