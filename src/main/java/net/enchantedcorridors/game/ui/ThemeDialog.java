@@ -14,6 +14,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import net.enchantedcorridors.game.ui.themes.Theme;
+import net.enchantedcorridors.game.ui.themes.ThemeBuilder;
+import net.enchantedcorridors.game.ui.themes.ThemeChangeListener;
+import net.enchantedcorridors.game.ui.themes.ThemeManager;
+
 public class ThemeDialog extends JDialog
 {
     private static final long serialVersionUID = 1L;
@@ -37,7 +42,7 @@ public class ThemeDialog extends JDialog
             @Override
             public void valueChanged(ListSelectionEvent e)
             {
-                themeManager.notifyChangeDontUpdateCurrent(new Theme(themeList.getSelectedValue()));
+                themeManager.notifyChangeDontUpdateCurrent(ThemeBuilder.it().from(themeList.getSelectedValue()));
             }
         });
 
@@ -52,7 +57,7 @@ public class ThemeDialog extends JDialog
                 keyPressedIndex = themeList.getSelectedIndex();
 
                 if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    themeManager.notifyChange(new Theme(themeList.getSelectedValue()));
+                    themeManager.notifyChange(ThemeBuilder.it().from(themeList.getSelectedValue()));
                     dispose();
                 } else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
                     themeManager.notifyChange(themeManager.getCurrent());

@@ -1,4 +1,4 @@
-package net.enchantedcorridors.game.ui;
+package net.enchantedcorridors.game.ui.themes;
 
 public interface ThemeChangeListener
 {

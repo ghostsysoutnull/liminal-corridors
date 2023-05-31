@@ -1,7 +1,7 @@
 package net.enchantedcorridors.game.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -29,6 +29,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableModel;
 
+import net.enchantedcorridors.game.ui.themes.Theme;
+import net.enchantedcorridors.game.ui.themes.ThemeBuilder;
+import net.enchantedcorridors.game.ui.themes.ThemeChangeListener;
+
 public class MysteryMansionGame extends JFrame implements ActionListener, KeyListener, MouseWheelListener, ThemeChangeListener, Game
 {
     private static final long serialVersionUID = 1L;
@@ -42,6 +46,7 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
     private int commandIndex;
 
     private int orderCounter;
+    
     private Font defaultFont;
     private Font monoFont;
     private Boolean isUsingMonoFont = false;
@@ -92,7 +97,7 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
 
         appendToTextArea("Welcome to the Mystery Mansion! Enter your commands below.");
 
-        applyTheme(new Theme("solar"));
+        applyTheme(ThemeBuilder.it().from("solar"));
         commandTF.requestFocusInWindow();
         commandTF.setText("help");
 
@@ -208,7 +213,7 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
         commandTF.setText("");
 
         commandHistory.addFirst(command);
-        if (commandHistory.size() > 10) {
+        if (commandHistory.size() > 100) {
             commandHistory.removeLast();
         }
         commandIndex = 0;
@@ -242,13 +247,14 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
             appendToTextArea("Goodbye!");
             System.exit(0);
         } else if (command.equalsIgnoreCase("dark")) {
-            applyTheme(new Theme("dark"));
+            applyTheme(ThemeBuilder.it().from("dark"));
         } else if (command.equalsIgnoreCase("red")) {
-            applyTheme(new Theme("red"));
+            applyTheme(ThemeBuilder.it().from("red"));
         } else if (command.equalsIgnoreCase("solar")) {
-            applyTheme(new Theme("solar"));
+            applyTheme(ThemeBuilder.it().from("solar"));
         } else if (command.equalsIgnoreCase("mono")) {
-            applyTheme(new Theme("mono"));
+            // applyTheme(new Theme("mono"));
+            toggleFontMono();
         } else if (command.equalsIgnoreCase("theme")) {
             openThemeDialog();
         } else if (command.equalsIgnoreCase("clear")) {
@@ -266,40 +272,28 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
         applyTheme(theme);
     }
 
-    private void applyTheme(Theme theme)
+    private void toggleFontMono()
     {
-        String mode = theme.getName();
-        if (mode.equalsIgnoreCase("dark")) {
-            gameStateTA.setBackground(Color.DARK_GRAY);
-            gameStateTA.setForeground(Color.WHITE);
-            inventoryTable.setBackground(Color.DARK_GRAY);
-            inventoryTable.setForeground(Color.WHITE);
-        } else if (mode.equalsIgnoreCase("red")) {
-            Color bg = new Color(57, 0, 0);
-            Color fg = new Color(162, 63, 63);
-            gameStateTA.setBackground(bg);
-            gameStateTA.setForeground(fg);
-            inventoryTable.setBackground(bg);
-            inventoryTable.setForeground(fg);
-        } else if (mode.equalsIgnoreCase("solar")) {
-            gameStateTA.setBackground(new Color(0, 43, 54));
-            gameStateTA.setForeground(new Color(131, 148, 150));
-            inventoryTable.setBackground(new Color(0, 43, 54));
-            inventoryTable.setForeground(new Color(131, 148, 150));
-        } else if (mode.equalsIgnoreCase("mono")) {
-            this.isUsingMonoFont = !isUsingMonoFont;
-            if (isUsingMonoFont) {
-                Font newFont = monoFont.deriveFont(gameStateTA.getFont().getSize() * 1f);
-                gameStateTA.setFont(newFont);
-            } else
-                gameStateTA.setFont(defaultFont);
+        this.isUsingMonoFont = !isUsingMonoFont;
+        if (isUsingMonoFont) {
+            Font newFont = monoFont.deriveFont(gameStateTA.getFont().getSize() * 1f);
+            gameStateTA.setFont(newFont);
         } else {
-            gameStateTA.setBackground(Color.WHITE);
-            gameStateTA.setForeground(Color.BLACK);
-            inventoryTable.setBackground(Color.WHITE);
-            inventoryTable.setForeground(Color.BLACK);
-            gameStateTA.setFont(defaultFont);
+            Font newFont = defaultFont.deriveFont(gameStateTA.getFont().getSize() * 1f);
+            gameStateTA.setFont(newFont);
         }
+    }
+
+    private void applyTheme(Theme t)
+    {
+        applyThemeToComponent(gameStateTA, t);
+        applyThemeToComponent(inventoryTable, t);
+    }
+
+    private static void applyThemeToComponent(Component c, Theme t)
+    {
+        c.setBackground(t.getBackground());
+        c.setForeground(t.getForeground());
     }
 
     private void increaseFontSize()

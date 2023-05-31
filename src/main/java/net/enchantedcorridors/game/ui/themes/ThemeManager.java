@@ -1,4 +1,4 @@
-package net.enchantedcorridors.game.ui;
+package net.enchantedcorridors.game.ui.themes;
 
 import java.util.LinkedList;
 import java.util.List;
