@@ -50,7 +50,7 @@ public class LiminalCorridorsFrame extends JFrame implements MouseWheelListener,
     private LinkedList<String> commandHistory;
     private int commandIndex;
 
-    private int orderCounter;
+    private int itemIdx;
 
     private Font defaultFont;
     private Font monoFont;
@@ -92,7 +92,7 @@ public class LiminalCorridorsFrame extends JFrame implements MouseWheelListener,
 
         commandHistory = new LinkedList<>();
         commandIndex = 0;
-        orderCounter = 1;
+        itemIdx = 1;
 
         defaultFont = gameStateTA.getFont();
         monoFont = new Font(Font.MONOSPACED, Font.PLAIN, defaultFont.getSize());
@@ -128,7 +128,7 @@ public class LiminalCorridorsFrame extends JFrame implements MouseWheelListener,
                 appendToTextArea(order + ". " + name + " - " + description);
             }
         } else if (command.equalsIgnoreCase("pickup item")) {
-            String itemName = "Item " + orderCounter;
+            String itemName = "Item " + itemIdx;
             String itemDescription = "Description of " + itemName;
             appendToInventory(itemName, itemDescription);
         } else if (command.equalsIgnoreCase("quit")) {
@@ -171,7 +171,7 @@ public class LiminalCorridorsFrame extends JFrame implements MouseWheelListener,
 
     private void appendToInventory(String name, String description)
     {
-        inventoryTableModel.addRow(new Object[] { orderCounter++, name, description });
+        inventoryTableModel.addRow(new Object[] { itemIdx++, name, description });
         inventoryTable.scrollRectToVisible(inventoryTable.getCellRect(inventoryTable.getRowCount() - 1, 0, true));
     }
 
@@ -196,7 +196,6 @@ public class LiminalCorridorsFrame extends JFrame implements MouseWheelListener,
         gameStateTA.setFont(newFont);
         commandTF.setFont(newFont);
         updateTFSize(commandTF);
-
     }
 
     private void decreaseFontSize()
