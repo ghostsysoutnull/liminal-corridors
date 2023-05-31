@@ -14,7 +14,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import net.enchantedcorridors.game.ui.themes.Theme;
 import net.enchantedcorridors.game.ui.themes.ThemeBuilder;
 import net.enchantedcorridors.game.ui.themes.ThemeChangeListener;
 import net.enchantedcorridors.game.ui.themes.ThemeManager;
