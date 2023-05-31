@@ -38,7 +38,7 @@ import net.enchantedcorridors.game.ui.themes.Theme;
 import net.enchantedcorridors.game.ui.themes.ThemeBuilder;
 import net.enchantedcorridors.game.ui.themes.ThemeChangeListener;
 
-public class LiminalCorridorsFrame extends JFrame implements ActionListener, KeyListener, MouseWheelListener, ThemeChangeListener, Game
+public class LiminalCorridorsFrame extends JFrame implements MouseWheelListener, ThemeChangeListener, Game
 {
     private static final long serialVersionUID = 1L;
 
@@ -80,9 +80,7 @@ public class LiminalCorridorsFrame extends JFrame implements ActionListener, Key
         splitPane.setDividerLocation(550);
         add(splitPane, BorderLayout.CENTER);
 
-        commandTF = new JTextField();
-        commandTF.addActionListener(this);
-        commandTF.addKeyListener(this);
+        this.commandTF = buildCommandTF();
         add(commandTF, BorderLayout.SOUTH);
 
         Border inventoryBorder = BorderFactory.createTitledBorder("Inventory");
@@ -109,6 +107,72 @@ public class LiminalCorridorsFrame extends JFrame implements ActionListener, Key
         createKeyBindings();
 
         isFullScreen = false;
+    }
+
+    public void processCommand(String command)
+    {
+        appendToTextArea("> " + command);
+
+        if (command.equalsIgnoreCase("help")) {
+            appendToTextArea("Available commands:\n- go <direction>\n- examine <object>\n- inventory\n- about\n- quit\n- theme\n- red\n- dark\n- solar\n- mono");
+        } else if (command.equalsIgnoreCase("go north")) {
+            appendToTextArea("You head north...");
+        } else if (command.equalsIgnoreCase("examine door")) {
+            appendToTextArea("You closely examine the door, noting its intricate carvings.");
+        } else if (command.equalsIgnoreCase("inventory")) {
+            appendToTextArea("You have the following items in your inventory:");
+            for (int i = 0; i < inventoryTableModel.getRowCount(); i++) {
+                String order = inventoryTableModel.getValueAt(i, 0).toString();
+                String name = inventoryTableModel.getValueAt(i, 1).toString();
+                String description = inventoryTableModel.getValueAt(i, 2).toString();
+                appendToTextArea(order + ". " + name + " - " + description);
+            }
+        } else if (command.equalsIgnoreCase("pickup item")) {
+            String itemName = "Item " + orderCounter;
+            String itemDescription = "Description of " + itemName;
+            appendToInventory(itemName, itemDescription);
+        } else if (command.equalsIgnoreCase("quit")) {
+            appendToTextArea("Goodbye!");
+            System.exit(0);
+        } else if (command.equalsIgnoreCase("dark")) {
+            applyTheme(ThemeBuilder.it().from("dark"));
+        } else if (command.equalsIgnoreCase("red")) {
+            applyTheme(ThemeBuilder.it().from("red"));
+        } else if (command.equalsIgnoreCase("solar")) {
+            applyTheme(ThemeBuilder.it().from("solar"));
+        } else if (command.equalsIgnoreCase("mono")) {
+            toggleFontMono();
+        } else if (command.equalsIgnoreCase("theme")) {
+            openThemeDialog();
+        } else if (command.equalsIgnoreCase("clear")) {
+            clearTextArea();
+        } else if (command.equalsIgnoreCase("about")) {
+            openAboutDialog();
+        } else {
+            appendToTextArea("Invalid command. Type 'help' for a list of available commands.");
+        }
+    }
+
+    private void clearTextField()
+    {
+        commandTF.setText("");
+    }
+
+    private void clearTextArea()
+    {
+        gameStateTA.setText("");
+    }
+
+    private void appendToTextArea(String text)
+    {
+        gameStateTA.append(text + "\n");
+        gameStateTA.setCaretPosition(gameStateTA.getDocument().getLength());
+    }
+
+    private void appendToInventory(String name, String description)
+    {
+        inventoryTableModel.addRow(new Object[] { orderCounter++, name, description });
+        inventoryTable.scrollRectToVisible(inventoryTable.getCellRect(inventoryTable.getRowCount() - 1, 0, true));
     }
 
     private void applyTheme(Theme t)
@@ -159,8 +223,60 @@ public class LiminalCorridorsFrame extends JFrame implements ActionListener, Key
         preferredSize.height = textHeight + 10; // Add padding
 
         textField.setPreferredSize(preferredSize);
-        textField.setMaximumSize(preferredSize); 
+        textField.setMaximumSize(preferredSize);
         SwingUtilities.getWindowAncestor(textField).pack();
+    }
+
+    @Override
+    public void onThemeChange(Theme theme)
+    {
+        applyTheme(theme);
+    }
+
+    private void toggleFontMono()
+    {
+        this.isUsingMonoFont = !isUsingMonoFont;
+        if (isUsingMonoFont) {
+            Font newFont = monoFont.deriveFont(gameStateTA.getFont().getSize() * 1f);
+            gameStateTA.setFont(newFont);
+        } else {
+            Font newFont = defaultFont.deriveFont(gameStateTA.getFont().getSize() * 1f);
+            gameStateTA.setFont(newFont);
+        }
+    }
+
+    private void resetFontSize()
+    {
+        System.out.println("resetFontSize defaultFontSize=" + defaultFontSize);
+        Font newFont = gameStateTA.getFont().deriveFont(defaultFontSize * 1f);
+        gameStateTA.setFont(newFont);
+    }
+
+    public void mouseWheelMoved(MouseWheelEvent e)
+    {
+        if (e.isControlDown()) {
+            int rotation = e.getWheelRotation();
+            if (rotation < 0) {
+                increaseFontSize();
+            } else {
+                decreaseFontSize();
+            }
+        }
+    }
+
+    public JDialog openAboutDialog()
+    {
+        return new AboutDialog(this.getWidth());
+    }
+
+    private void openThemeDialog()
+    {
+        new ThemeDialog(this, this);
+    }
+
+    private void openCommandSelectionDialog()
+    {
+        new CommandSelectionDialog(this, this);
     }
 
     @SuppressWarnings("serial")
@@ -238,173 +354,63 @@ public class LiminalCorridorsFrame extends JFrame implements ActionListener, Key
             });
         }
     }
-
-    private void clearTextField()
+    
+    private JTextField buildCommandTF()
     {
-        commandTF.setText("");
-    }
+        JTextField commandTF = new JTextField();
+        commandTF.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                String command = commandTF.getText();
+                processCommand(command);
+                commandTF.setText("");
 
-    private void clearTextArea()
-    {
-        gameStateTA.setText("");
-    }
-
-    private void appendToTextArea(String text)
-    {
-        gameStateTA.append(text + "\n");
-        gameStateTA.setCaretPosition(gameStateTA.getDocument().getLength());
-    }
-
-    private void appendToInventory(String name, String description)
-    {
-        inventoryTableModel.addRow(new Object[] { orderCounter++, name, description });
-        inventoryTable.scrollRectToVisible(inventoryTable.getCellRect(inventoryTable.getRowCount() - 1, 0, true));
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e)
-    {
-        String command = commandTF.getText();
-        processCommand(command);
-        commandTF.setText("");
-
-        commandHistory.addFirst(command);
-        if (commandHistory.size() > 100) {
-            commandHistory.removeLast();
-        }
-        commandIndex = 0;
-    }
-
-    public void processCommand(String command)
-    {
-        appendToTextArea("> " + command);
-
-        // Implement game logic based on the command entered
-        if (command.equalsIgnoreCase("help")) {
-            appendToTextArea("Available commands:\n- go <direction>\n- examine <object>\n- inventory\n- about\n- quit\n- theme\n- red\n- dark\n- solar\n- mono");
-        } else if (command.equalsIgnoreCase("go north")) {
-            appendToTextArea("You head north...");
-        } else if (command.equalsIgnoreCase("examine door")) {
-            appendToTextArea("You closely examine the door, noting its intricate carvings.");
-        } else if (command.equalsIgnoreCase("inventory")) {
-            appendToTextArea("You have the following items in your inventory:");
-            // Print the inventory table
-            for (int i = 0; i < inventoryTableModel.getRowCount(); i++) {
-                String order = inventoryTableModel.getValueAt(i, 0).toString();
-                String name = inventoryTableModel.getValueAt(i, 1).toString();
-                String description = inventoryTableModel.getValueAt(i, 2).toString();
-                appendToTextArea(order + ". " + name + " - " + description);
+                commandHistory.addFirst(command);
+                if (commandHistory.size() > 100) {
+                    commandHistory.removeLast();
+                }
+                commandIndex = 0;
             }
-        } else if (command.equalsIgnoreCase("pickup item")) {
-            String itemName = "Item " + orderCounter;
-            String itemDescription = "Description of " + itemName;
-            appendToInventory(itemName, itemDescription);
-        } else if (command.equalsIgnoreCase("quit")) {
-            appendToTextArea("Goodbye!");
-            System.exit(0);
-        } else if (command.equalsIgnoreCase("dark")) {
-            applyTheme(ThemeBuilder.it().from("dark"));
-        } else if (command.equalsIgnoreCase("red")) {
-            applyTheme(ThemeBuilder.it().from("red"));
-        } else if (command.equalsIgnoreCase("solar")) {
-            applyTheme(ThemeBuilder.it().from("solar"));
-        } else if (command.equalsIgnoreCase("mono")) {
-            // applyTheme(new Theme("mono"));
-            toggleFontMono();
-        } else if (command.equalsIgnoreCase("theme")) {
-            openThemeDialog();
-        } else if (command.equalsIgnoreCase("clear")) {
-            clearTextArea();
-        } else if (command.equalsIgnoreCase("about")) {
-            openAboutDialog();
-        } else {
-            appendToTextArea("Invalid command. Type 'help' for a list of available commands.");
-        }
-    }
+        });
 
-    @Override
-    public void onThemeChange(Theme theme)
-    {
-        applyTheme(theme);
-    }
-
-    private void toggleFontMono()
-    {
-        this.isUsingMonoFont = !isUsingMonoFont;
-        if (isUsingMonoFont) {
-            Font newFont = monoFont.deriveFont(gameStateTA.getFont().getSize() * 1f);
-            gameStateTA.setFont(newFont);
-        } else {
-            Font newFont = defaultFont.deriveFont(gameStateTA.getFont().getSize() * 1f);
-            gameStateTA.setFont(newFont);
-        }
-    }
-
-    private void resetFontSize()
-    {
-        System.out.println("resetFontSize defaultFontSize=" + defaultFontSize);
-        Font newFont = gameStateTA.getFont().deriveFont(defaultFontSize * 1f);
-        gameStateTA.setFont(newFont);
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e)
-    {
-        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            clearTextField();
-        } else if (e.isControlDown()) {
-            if (e.getKeyCode() == KeyEvent.VK_PLUS || e.getKeyCode() == KeyEvent.VK_EQUALS) {
-                increaseFontSize();
-            } else if (e.getKeyCode() == KeyEvent.VK_MINUS) {
-                decreaseFontSize();
-            } else if (e.getKeyCode() == KeyEvent.VK_0) {
-                resetFontSize();
+        commandTF.addKeyListener(new KeyListener()
+        {
+            @Override
+            public void keyTyped(KeyEvent e)
+            {
             }
-        } else if (e.getKeyCode() == KeyEvent.VK_UP) {
-            if (commandIndex < commandHistory.size()) {
-                commandTF.setText(commandHistory.get(commandIndex));
-                commandIndex++;
+
+            @Override
+            public void keyReleased(KeyEvent e)
+            {
             }
-        } else if (e.getKeyCode() == KeyEvent.VK_G && e.isControlDown()) {
-            openCommandSelectionDialog();
-        }
-    }
 
-    public void mouseWheelMoved(MouseWheelEvent e)
-    {
-        if (e.isControlDown()) {
-            int rotation = e.getWheelRotation();
-            if (rotation < 0) {
-                increaseFontSize();
-            } else {
-                decreaseFontSize();
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    clearTextField();
+                } else if (e.isControlDown()) {
+                    if (e.getKeyCode() == KeyEvent.VK_PLUS || e.getKeyCode() == KeyEvent.VK_EQUALS) {
+                        increaseFontSize();
+                    } else if (e.getKeyCode() == KeyEvent.VK_MINUS) {
+                        decreaseFontSize();
+                    } else if (e.getKeyCode() == KeyEvent.VK_0) {
+                        resetFontSize();
+                    }
+                } else if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    if (commandIndex < commandHistory.size()) {
+                        commandTF.setText(commandHistory.get(commandIndex));
+                        commandIndex++;
+                    }
+                } else if (e.getKeyCode() == KeyEvent.VK_G && e.isControlDown()) {
+                    openCommandSelectionDialog();
+                }
             }
-        }
-    }
-
-    public JDialog openAboutDialog()
-    {
-        return new AboutDialog(this.getWidth());
-    }
-
-    private void openThemeDialog()
-    {
-        new ThemeDialog(this, this);
-    }
-
-    private void openCommandSelectionDialog()
-    {
-        new CommandSelectionDialog(this, this);
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e)
-    {
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e)
-    {
+        });
+        return commandTF;
     }
 
     public static void main(String[] args)
