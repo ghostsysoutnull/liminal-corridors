@@ -2,7 +2,9 @@ package net.enchantedcorridors.game.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -46,7 +48,7 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
     private int commandIndex;
 
     private int orderCounter;
-    
+
     private Font defaultFont;
     private Font monoFont;
     private Boolean isUsingMonoFont = false;
@@ -92,7 +94,6 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
         orderCounter = 1;
 
         defaultFont = gameStateTA.getFont();
-        defaultFontSize = defaultFont.getSize();
         monoFont = new Font(Font.MONOSPACED, Font.PLAIN, defaultFont.getSize());
 
         appendToTextArea("Welcome to the Mystery Mansion! Enter your commands below.");
@@ -105,6 +106,58 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
         createKeyBindings();
 
         isFullScreen = false;
+    }
+
+    private void applyTheme(Theme t)
+    {
+        applyThemeToComponent(gameStateTA, t);
+        applyThemeToComponent(inventoryTable, t);
+        applyThemeToComponent(commandTF, t);
+    }
+
+    private static void applyThemeToComponent(Component c, Theme t)
+    {
+        c.setBackground(t.getBackground());
+        c.setForeground(t.getForeground());
+    }
+
+    private void increaseFontSize()
+    {
+        Font currentFont = gameStateTA.getFont();
+        int currentSize = currentFont.getSize();
+        Font newFont = currentFont.deriveFont(currentSize + 1.0f);
+        gameStateTA.setFont(newFont);
+        commandTF.setFont(newFont);
+        updateTFSize(commandTF);
+
+    }
+
+    private void decreaseFontSize()
+    {
+        Font currentFont = gameStateTA.getFont();
+        int currentSize = currentFont.getSize();
+        if (currentSize > 1) {
+            Font newFont = currentFont.deriveFont(currentSize - 1.0f);
+            gameStateTA.setFont(newFont);
+            commandTF.setFont(newFont);
+            updateTFSize(commandTF);
+        }
+    }
+
+    void updateTFSize(JTextField textField)
+    {
+        FontMetrics fontMetrics = textField.getFontMetrics(textField.getFont());
+        int textWidth = fontMetrics.stringWidth(textField.getText());
+        int textHeight = fontMetrics.getHeight();
+
+        Dimension preferredSize = textField.getPreferredSize();
+        int maxWidth = 200;
+        preferredSize.width = Math.min(textWidth + 10, maxWidth); // Add padding and limit to maximum width
+        preferredSize.height = textHeight + 10; // Add padding
+
+        textField.setPreferredSize(preferredSize);
+        textField.setMaximumSize(preferredSize); 
+        SwingUtilities.getWindowAncestor(textField).pack();
     }
 
     @SuppressWarnings("serial")
@@ -280,36 +333,6 @@ public class MysteryMansionGame extends JFrame implements ActionListener, KeyLis
             gameStateTA.setFont(newFont);
         } else {
             Font newFont = defaultFont.deriveFont(gameStateTA.getFont().getSize() * 1f);
-            gameStateTA.setFont(newFont);
-        }
-    }
-
-    private void applyTheme(Theme t)
-    {
-        applyThemeToComponent(gameStateTA, t);
-        applyThemeToComponent(inventoryTable, t);
-    }
-
-    private static void applyThemeToComponent(Component c, Theme t)
-    {
-        c.setBackground(t.getBackground());
-        c.setForeground(t.getForeground());
-    }
-
-    private void increaseFontSize()
-    {
-        Font currentFont = gameStateTA.getFont();
-        int currentSize = currentFont.getSize();
-        Font newFont = currentFont.deriveFont(currentSize + 1.0f);
-        gameStateTA.setFont(newFont);
-    }
-
-    private void decreaseFontSize()
-    {
-        Font currentFont = gameStateTA.getFont();
-        int currentSize = currentFont.getSize();
-        if (currentSize > 1) {
-            Font newFont = currentFont.deriveFont(currentSize - 1.0f);
             gameStateTA.setFont(newFont);
         }
     }
