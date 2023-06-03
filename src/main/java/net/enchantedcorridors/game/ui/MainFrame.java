@@ -38,7 +38,7 @@ import net.enchantedcorridors.game.ui.themes.Theme;
 import net.enchantedcorridors.game.ui.themes.ThemeBuilder;
 import net.enchantedcorridors.game.ui.themes.ThemeChangeListener;
 
-public class LiminalCorridorsFrame extends JFrame implements MouseWheelListener, ThemeChangeListener, Game
+public class MainFrame extends JFrame implements MouseWheelListener, ThemeChangeListener, Game
 {
     private static final long serialVersionUID = 1L;
 
@@ -59,7 +59,7 @@ public class LiminalCorridorsFrame extends JFrame implements MouseWheelListener,
 
     private boolean isFullScreen;
 
-    public LiminalCorridorsFrame()
+    public MainFrame()
     {
         setTitle("Mystery Mansion Game");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -418,7 +418,7 @@ public class LiminalCorridorsFrame extends JFrame implements MouseWheelListener,
         {
             public void run()
             {
-                new LiminalCorridorsFrame();
+                new MainFrame();
             }
         });
     }
