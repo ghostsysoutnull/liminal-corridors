@@ -61,7 +61,7 @@ public class CommandSelectionDialog
                             openAboutDialog = game.openAboutDialog();
                         } else {
                             System.out.println("openCommandSelectionDialog 2");
-                            game.processCommand(selectedCommand);
+                            game.getCommandProcessor().processCommand(selectedCommand);
                         }
                         commandDialog.dispose();
                         if (openAboutDialog != null)

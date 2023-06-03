@@ -2,9 +2,19 @@ package net.enchantedcorridors.game.ui;
 
 import javax.swing.JDialog;
 
-public interface Game
+import net.enchantedcorridors.game.ui.themes.Theme;
+
+public interface Game 
 {
     JDialog openAboutDialog();
-
-    void processCommand(String command);
+    void clearTextArea();
+    void resetFontSize();
+    void openCommandSelectionDialog();
+    void appendToTextArea(String text);
+    void applyTheme(Theme theme);
+    void toggleFontMono();
+    void openThemeDialog();
+    CommandProcessor getCommandProcessor();
+    void increaseFontSize();
+    void toggleFullScreen();
 }
