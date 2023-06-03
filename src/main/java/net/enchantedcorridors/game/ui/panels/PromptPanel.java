@@ -1,4 +1,4 @@
-package net.enchantedcorridors.game.ui;
+package net.enchantedcorridors.game.ui.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -19,7 +19,10 @@ import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 
+import net.enchantedcorridors.game.ui.Game;
+import net.enchantedcorridors.game.ui.themes.HasTheme;
 import net.enchantedcorridors.game.ui.themes.Theme;
+import net.enchantedcorridors.game.ui.utils.UIUtils;
 
 public class PromptPanel extends JPanel implements HasTheme
 {
@@ -157,7 +160,7 @@ public class PromptPanel extends JPanel implements HasTheme
         commandTF.setForeground(t.getForeground());
     }
 
-    void requestFocusToPrompt()
+    public void requestFocusToPrompt()
     {
         commandTF.requestFocusInWindow();
     }

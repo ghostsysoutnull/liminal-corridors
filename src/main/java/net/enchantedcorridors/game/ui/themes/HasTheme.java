@@ -1,6 +1,4 @@
-package net.enchantedcorridors.game.ui;
-
-import net.enchantedcorridors.game.ui.themes.Theme;
+package net.enchantedcorridors.game.ui.themes;
 
 public interface HasTheme
 {
